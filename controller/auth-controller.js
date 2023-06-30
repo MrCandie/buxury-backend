@@ -164,3 +164,61 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
+
+exports.resendOtp = catchAsync(async (req, res, next) => {
+  if (!req.body.email) {
+    return next(new AppError("empty user details are not allowed"));
+  }
+
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("User with this email not found", 404));
+  }
+
+  await OTP.deleteMany({ userId: user.id });
+  const token = await generateToken(user.id);
+
+  const message = `Dear User, your verification code is ${token}. Expires in 10mins`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Verification code",
+    html: message,
+  });
+
+  await user.save();
+
+  return res.status(200).json({
+    status: "pending",
+    data: {
+      message: "verification token sent",
+      userId: user.id,
+    },
+  });
+});
+
+// UPDATE PASSWORD
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const { password, oldPassword } = req.body;
+
+  if (!password || !oldPassword) {
+    return next(new AppError("password details cannot be empty", 400));
+  }
+  const user = await User.findById(req.user.id).select("+password");
+
+  if (!user) {
+    return next(new AppError("user not found", 404));
+  }
+
+  if (!(await user.verifyPassword(oldPassword, user.password))) {
+    return next(new AppError("Incorrect password", 401));
+  }
+
+  user.password = password;
+  await user.save();
+
+  return res.status(200).json({
+    status: "success",
+    message: "Password successfully updated",
+  });
+});
