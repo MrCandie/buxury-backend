@@ -64,3 +64,13 @@ exports.updateStore = catchAsync(async (req, res, next) => {
     store,
   });
 });
+
+exports.viewStore = catchAsync(async (req, res, next) => {
+  const store = await Store.findOne({ slug: req.params.slug });
+
+  if (!store) {
+    return next(new AppError("store not found", 404));
+  }
+
+  return res.status(200).json({ status: "success", store });
+});
