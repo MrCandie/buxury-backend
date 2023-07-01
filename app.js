@@ -11,6 +11,7 @@ const AppError = require("./util/app-error");
 const app = express();
 
 const userRouter = require("./router/user-router");
+const storeRouter = require("./router/store-router");
 
 const corsOptions = {
   origin: "*",
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/store", storeRouter);
 
 app.all("*", (req, res, next) => {
   return next(new AppError(`Can't find ${req.originalUrl} on this server`));

@@ -43,3 +43,10 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+// SET USER ID
+exports.setUserId = (req, res, next) => {
+  if (!req.body.user) req.body.user = req.user.id;
+  if (!req.body.userId) req.body.userId = req.user.id;
+  next();
+};

@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema(
       default: "",
       // validate: [validator.isMobilePhone, "enter a valid mobile number"],
     },
+    address: {
+      type: String,
+      trim: true,
+      default: null,
+    },
     role: {
       type: String,
       trim: true,

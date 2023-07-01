@@ -8,12 +8,15 @@ const {
   resendOtp,
   updatePassword,
 } = require("../controller/auth-controller");
+const { updateUser } = require("../controller/user-controller");
 
 const { protect } = require("../middleware");
 
 const router = express.Router();
 
 router.post("/register", signup);
+
+router.patch("/", protect, updateUser);
 
 router.post("/login", login);
 
