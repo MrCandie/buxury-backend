@@ -32,6 +32,10 @@ const storeSchema = new mongoose.Schema(
       trim: true,
       default: null,
     },
+    tags: {
+      type: Array,
+      default: [],
+    },
     user: [
       {
         type: mongoose.Schema.ObjectId,
