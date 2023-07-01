@@ -3,16 +3,30 @@ const catchAsync = require("./../util/catch-async");
 const User = require("./../model/user-model");
 const Store = require("../model/store-model");
 const sendEmail = require("../util/send-email");
+const uploadFile = require("../util/file-upload");
 
 exports.createStore = catchAsync(async (req, res, next) => {
   const storeExists = await Store.find({ name: req.body.name });
   const user = await User.findById(req.user.id);
+  const result = await uploadFile(req);
+
+  let data;
+  if (result.secure_url) {
+    data = {
+      ...req.body,
+      logo: result.secure_url,
+    };
+  } else {
+    data = {
+      ...req.body,
+    };
+  }
 
   if (storeExists.length !== 0) {
     return next(new AppError("Store name taken", 400));
   }
 
-  const store = await Store.create(req.body);
+  const store = await Store.create(data);
 
   const message = `Dear ${
     user.name || "user"
@@ -44,12 +58,23 @@ exports.getUserStores = catchAsync(async (req, res, next) => {
 });
 
 exports.updateStore = catchAsync(async (req, res, next) => {
-  const data = {
-    name: req.body.name,
-    phone: req.body.phone,
-    address: req.body.address,
-    logo: req.body.logo,
-  };
+  const result = await uploadFile(req);
+  let data;
+  if (result.secure_url) {
+    data = {
+      name: req.body.name,
+      phone: req.body.phone,
+      address: req.body.address,
+      logo: result.secure_url,
+    };
+  } else {
+    data = {
+      name: req.body.name,
+      phone: req.body.phone,
+      address: req.body.address,
+    };
+  }
+
   const store = await Store.findByIdAndUpdate(req.params.id, data, {
     new: true,
     runValidators: true,

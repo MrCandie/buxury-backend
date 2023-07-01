@@ -4,6 +4,13 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 const globalErrorController = require("./controller/error-controller");
 const AppError = require("./util/app-error");
