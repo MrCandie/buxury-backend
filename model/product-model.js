@@ -2,17 +2,30 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const slugify = require("slugify");
 
-const storeSchema = new mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "store must have a name"],
+      required: [true, "product must have a name"],
       trim: true,
     },
-    image: {
-      type: String,
+    price: {
+      type: Number,
+      default: 0,
       trim: true,
+    },
+    reviews: {
+      type: Array,
+      default: [],
+    },
+    description: {
+      type: String,
       default: null,
+    },
+    slug: String,
+    image: {
+      type: Array,
+      default: [],
     },
     ratingsAverage: {
       type: Number,
@@ -24,24 +37,7 @@ const storeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    email: {
-      type: String,
-      trim: true,
-      validate: [validator.isEmail, "enter a valid email address"],
-      required: [true, "store must have a contact email address"],
-      unique: true,
-    },
-    phone: {
-      type: String,
-      trim: true,
-      default: "",
-      // validate: [validator.isMobilePhone, "enter a valid mobile number"],
-    },
-    address: {
-      type: String,
-      trim: true,
-      default: null,
-    },
+
     tags: {
       type: Array,
       default: [],
@@ -50,12 +46,23 @@ const storeSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "User",
-        required: [true, "store must belong to a user"],
+        required: [true, "product must belong to a user"],
       },
     ],
     userId: {
       type: String,
-      required: [true, "store must belong to a user"],
+      required: [true, "product must belong to a user"],
+    },
+    store: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Store",
+        required: [true, "product must belong to a store"],
+      },
+    ],
+    storeId: {
+      type: String,
+      required: [true, "product must belong to a store"],
     },
     slug: String,
     createdAt: {
@@ -73,11 +80,11 @@ const storeSchema = new mongoose.Schema(
   }
 );
 
-storeSchema.pre("save", function (next) {
+productSchema.pre("save", function (next) {
   this.slug = slugify(this.name, {
     lower: true,
   });
   next();
 });
 
-module.exports = mongoose.model("Store", storeSchema);
+module.exports = mongoose.model("Product", productSchema);
