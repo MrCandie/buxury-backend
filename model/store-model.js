@@ -9,7 +9,7 @@ const storeSchema = new mongoose.Schema(
       required: [true, "store must have a name"],
       trim: true,
     },
-    logo: {
+    image: {
       type: String,
       trim: true,
       default: null,

@@ -14,7 +14,7 @@ exports.createStore = catchAsync(async (req, res, next) => {
   if (result.secure_url) {
     data = {
       ...req.body,
-      logo: result.secure_url,
+      image: result.secure_url,
     };
   } else {
     data = {
@@ -65,7 +65,7 @@ exports.updateStore = catchAsync(async (req, res, next) => {
       name: req.body.name,
       phone: req.body.phone,
       address: req.body.address,
-      logo: result.secure_url,
+      image: result.secure_url,
     };
   } else {
     data = {
