@@ -99,3 +99,9 @@ exports.viewStore = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({ status: "success", store });
 });
+
+exports.getAllStores = catchAsync(async (req, res, next) => {
+  const stores = await Store.find();
+
+  return res.status(200).json({ status: "success", stores });
+});
