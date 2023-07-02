@@ -48,9 +48,12 @@ exports.viewCart = catchAsync(async (req, res, next) => {
 
 exports.removeCart = catchAsync(async (req, res, next) => {
   const cart = await Cart.findById(req.params.id);
+  const product = await Product.findById(cart.productId);
 
   if (req.body.type === "reduce" && cart.quantity > 1) {
     cart.quantity = cart.quantity - 1;
+    product.units = product.units + 1;
+    await product.save();
     await cart.save();
   } else {
     await Cart.findByIdAndDelete(req.params.id);
