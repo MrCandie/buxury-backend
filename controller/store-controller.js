@@ -4,6 +4,7 @@ const User = require("./../model/user-model");
 const Store = require("../model/store-model");
 const sendEmail = require("../util/send-email");
 const uploadFile = require("../util/file-upload");
+const Product = require("../model/product-model");
 
 exports.createStore = catchAsync(async (req, res, next) => {
   const storeExists = await Store.find({ name: req.body.name });
@@ -92,12 +93,13 @@ exports.updateStore = catchAsync(async (req, res, next) => {
 
 exports.viewStore = catchAsync(async (req, res, next) => {
   const store = await Store.findOne({ slug: req.params.slug });
+  const products = await Product.find({ storeId: store.id });
 
   if (!store) {
     return next(new AppError("store not found", 404));
   }
 
-  return res.status(200).json({ status: "success", store });
+  return res.status(200).json({ status: "success", data: { store, products } });
 });
 
 exports.getAllStores = catchAsync(async (req, res, next) => {

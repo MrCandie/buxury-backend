@@ -14,10 +14,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
       trim: true,
     },
-    reviews: {
-      type: Array,
-      default: [],
-    },
+
     description: {
       type: String,
       default: null,
