@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 
 exports.uploadImages = catchAsync(async (req, res, next) => {
   const result = await cloudinary.uploader.upload(
-    req.files.image.tempFilePath,
+    req.files?.image.tempFilePath,
     {
       use_filename: true,
       folder: "buxury",
