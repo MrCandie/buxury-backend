@@ -9,10 +9,9 @@ const {
 
 const router = express.Router();
 
+router.get("/all", getAllProducts);
 router.post("/", protect, setUserId, createProduct);
 router.get("/:id", protect, viewProduct);
-
-router.get("/all", getAllProducts);
 
 router.post("/upload", protect, uploadImages);
 
