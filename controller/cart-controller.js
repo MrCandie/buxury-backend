@@ -22,7 +22,9 @@ exports.createCart = catchAsync(async (req, res, next) => {
       return next(new AppError("insufficient quantity", 400));
     } else {
       userCart.quantity = userCart.quantity + 1;
+      product.units = product.units - 1;
     }
+    await product.save();
     await userCart.save();
   } else {
     userCart = await Cart.create(data);

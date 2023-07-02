@@ -40,6 +40,7 @@ const productSchema = new mongoose.Schema(
     units: {
       type: Number,
       default: 0,
+      required: [true, "product must have available quantity"],
     },
     tags: {
       type: Array,
