@@ -29,8 +29,7 @@ exports.createCart = catchAsync(async (req, res, next) => {
 });
 
 exports.viewCart = catchAsync(async (req, res, next) => {
-  const cart = await Cart.find({ userId: req.user.id })
-  .populate("product");
+  const cart = await Cart.find({ userId: req.user.id }).populate("product");
 
   return res.status(200).json({
     status: "success",
@@ -48,6 +47,18 @@ exports.removeCart = catchAsync(async (req, res, next) => {
   } else {
     await Cart.findByIdAndDelete(req.params.id);
   }
+
+  return res.status(200).json({
+    status: "success",
+    data: cart,
+  });
+});
+
+exports.getProductCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.find({
+    userId: req.user.id,
+    productId: req.params.id,
+  });
 
   return res.status(200).json({
     status: "success",
