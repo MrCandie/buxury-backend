@@ -15,8 +15,14 @@ exports.createCart = catchAsync(async (req, res, next) => {
     userId: req.user.id,
   });
 
+  const product = await Product.findById(req.body.productId);
+
   if (userCart) {
-    userCart.quantity = userCart.quantity + 1;
+    if (userCart.quantity >= product.units) {
+      return next(new AppError("insufficient quantity", 400));
+    } else {
+      userCart.quantity = userCart.quantity + 1;
+    }
     await userCart.save();
   } else {
     userCart = await Cart.create(data);
