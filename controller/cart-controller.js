@@ -57,6 +57,8 @@ exports.removeCart = catchAsync(async (req, res, next) => {
     await cart.save();
   } else {
     await Cart.findByIdAndDelete(req.params.id);
+    product.units = product.units + cart.quantity;
+    await product.save();
   }
 
   return res.status(200).json({
