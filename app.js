@@ -21,6 +21,7 @@ const userRouter = require("./router/user-router");
 const storeRouter = require("./router/store-router");
 const productRouter = require("./router/product-router");
 const cartRouter = require("./router/cart-router");
+const favoriteRouter = require("./router/favorite-router");
 
 const corsOptions = {
   origin: "*",
@@ -54,6 +55,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/store", storeRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/favorite", favoriteRouter);
 
 app.all("*", (req, res, next) => {
   return next(new AppError(`Can't find ${req.originalUrl} on this server`));
