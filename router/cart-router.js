@@ -5,10 +5,12 @@ const {
   viewCart,
   removeCart,
   getProductCart,
+  getTotalPrice,
 } = require("../controller/cart-controller");
 
 const router = express.Router();
 
+router.get("/total-amount", protect, getTotalPrice);
 router.get("/", protect, viewCart);
 
 router.get("/:id", protect, getProductCart);

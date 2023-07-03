@@ -78,3 +78,16 @@ exports.getProductCart = catchAsync(async (req, res, next) => {
     data: cart,
   });
 });
+
+exports.getTotalPrice = catchAsync(async (req, res, next) => {
+  const userCart = await Cart.find({ userId: req.user.id }).populate("product");
+
+  const totalAmount = userCart
+    .map((el) => el.product[0].price * el.quantity)
+    .reduce((acc, sum) => acc + sum, 0);
+
+  return res.status(200).json({
+    status: "success",
+    amount: totalAmount,
+  });
+});
