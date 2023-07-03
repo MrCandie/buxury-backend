@@ -54,3 +54,15 @@ exports.deleteFavorite = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+exports.checkProduct = catchAsync(async (req, res, next) => {
+  const productExist = await Favorite.find({
+    productId: req.body.productId,
+    userId: req.user.id,
+  });
+
+  return res.status(200).json({
+    status: "success",
+    exists: productExist.length > 0 ? true : false,
+  });
+});
