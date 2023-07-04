@@ -3,6 +3,7 @@ const catchAsync = require("./../util/catch-async");
 const User = require("./../model/user-model");
 const Product = require("../model/product-model");
 const cloudinary = require("cloudinary").v2;
+const Review = require("../model/review-model");
 
 exports.uploadImages = catchAsync(async (req, res, next) => {
   const result = await cloudinary.uploader.upload(
@@ -35,6 +36,10 @@ exports.viewProduct = catchAsync(async (req, res, next) => {
     path: "store",
     select: "name image",
   });
+  const reviews = await Review.find({ productId: product.id }).populate({
+    path: "user",
+    select: "name",
+  });
 
   if (!product) {
     return next(new AppError("product not found", 404));
@@ -42,7 +47,7 @@ exports.viewProduct = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     status: "success",
-    data: product,
+    data: { product, reviews },
   });
 });
 
