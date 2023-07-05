@@ -22,7 +22,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     hostname: "api.paystack.co",
     port: 443,
     path: "/transaction/initialize",
-    callback_url: req.body.callback_url,
+    callback: req.body.callback_url,
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
