@@ -5,6 +5,7 @@ const {
   uploadImages,
   viewProduct,
   getAllProducts,
+  addProductReview,
 } = require("../controller/product-controller");
 
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 router.get("/all", getAllProducts);
 router.post("/", protect, setUserId, createProduct);
 router.get("/:id", protect, viewProduct);
+router.post("/review", protect, addProductReview);
 
 router.post("/upload", protect, uploadImages);
 

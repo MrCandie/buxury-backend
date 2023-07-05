@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema(
       default: 0,
       required: [true, "product must have available quantity"],
     },
+    reviews: {
+      type: Array,
+      default: [],
+    },
     tags: {
       type: Array,
       default: [],
