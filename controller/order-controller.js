@@ -14,7 +14,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   const params = JSON.stringify({
     email: user.email,
     amount: req.body.price,
-    callback_url: "http://localhost:3000/products/success",
+    callback_url: "https://buxury.vercel.app/products/success",
   });
 
   const options = {
