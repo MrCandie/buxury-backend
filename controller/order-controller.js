@@ -16,13 +16,13 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   const params = JSON.stringify({
     email: user.email,
     amount: req.body.price,
+    callback: "http://localhost:3000/product/success",
   });
 
   const options = {
     hostname: "api.paystack.co",
     port: 443,
     path: "/transaction/initialize",
-    callback: req.body.callback_url,
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
