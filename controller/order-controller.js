@@ -16,7 +16,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   const params = JSON.stringify({
     email: user.email,
     amount: req.body.price,
-    callback: "http://localhost:3000/product/success",
+    callback_url: "http://localhost:3000/product/success",
   });
 
   const options = {
@@ -54,4 +54,32 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   request.end();
 });
 
-exports.verifyOrder = catchAsync(async (req, res, next) => {});
+exports.verifyOrder = catchAsync(async (req, res, next) => {
+  const options = {
+    hostname: "api.paystack.co",
+    port: 443,
+    path: `/transaction/verify/:${req.body.reference}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+    },
+  };
+
+  https
+    .request(options, (res) => {
+      let data = "";
+
+      res.on("data", (chunk) => {
+        data += chunk;
+      });
+
+      res.on("end", () => {
+        return res.status(200).json({
+          data: JSON.parse(data),
+        });
+      });
+    })
+    .on("error", (error) => {
+      console.error(error);
+    });
+});
