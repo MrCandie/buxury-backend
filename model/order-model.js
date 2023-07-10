@@ -14,6 +14,10 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    reference: {
+      type: String,
+      required: [true, "order reference missing"],
+    },
     user: [
       {
         type: mongoose.Schema.ObjectId,
