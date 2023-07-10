@@ -106,7 +106,7 @@ exports.onSuccess = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserOrders = catchAsync(async (req, res) => {
-  const orders = await Order.find({ userId: req.user.id }).select("order");
+  const orders = await Order.find({ userId: req.user.id })
 
   return res.status(200).json({
     status: "success",
