@@ -10,6 +10,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: [true, "price missing"],
     },
+    address: {
+      type: String,
+      required: [true, "order must have delivery address"],
+    },
     createdAt: {
       type: Date,
       default: Date.now(),
