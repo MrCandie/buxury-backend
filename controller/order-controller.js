@@ -150,3 +150,20 @@ exports.viewOrder = catchAsync(async (req, res, next) => {
     order,
   });
 });
+
+exports.updateOrder = catchAsync(async (req, res, next) => {
+  const data = { status: req.body.status };
+  const order = await Order.findByIdAndUpdate(req.params.id, data, {
+    new: true,
+    runvalidators: true,
+  });
+
+  if (!order) {
+    return next(new AppError("order not found", 404));
+  }
+
+  return res.status(200).json({
+    status: "success",
+    order,
+  });
+});
