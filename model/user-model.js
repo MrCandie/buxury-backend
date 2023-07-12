@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "enter a valid password"],
       select: false,
     },
+    hasStore: {
+      type: Boolean,
+      default: false,
+    },
     email: {
       type: String,
       trim: true,

@@ -6,6 +6,7 @@ const OTP = require("./../model/otp-model");
 const generateToken = require("./../util/generate-token");
 const verifyToken = require("./../util/verify-token");
 const createSendToken = require("../util/jwt");
+const Store = require("../model/store-model");
 const crypto = require("crypto");
 
 // SIGN UP
@@ -42,6 +43,16 @@ exports.signup = catchAsync(async (req, res, next) => {
     newUser.name || ""
   }, your Buxury account is registered, Use this code ${token} to verify your account. Expires in 10minutes`;
 
+  const userHasStore = await Store.find({ userId: newUser.id });
+
+  if (userHasStore.length > 0) {
+    newUser.hasStore = true;
+  } else {
+    newUser.hasStore = false;
+  }
+
+  await newUser.save();
+
   try {
     await sendEmail({
       to: req.body.email,
@@ -72,6 +83,16 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!(await user.verifyPassword(req.body.password, user.password))) {
     return next(new AppError("Incorrect credentials", 401));
   }
+
+  const userHasStore = await Store.find({ userId: user.id });
+
+  if (userHasStore.length > 0) {
+    user.hasStore = true;
+  } else {
+    user.hasStore = false;
+  }
+
+  await user.save();
 
   createSendToken(user, 200, res);
 });
