@@ -106,10 +106,23 @@ exports.onSuccess = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserOrders = catchAsync(async (req, res) => {
-  const orders = await Order.find({ userId: req.user.id })
+  const orders = await Order.find({ userId: req.user.id });
 
   return res.status(200).json({
     status: "success",
     orders,
+  });
+});
+
+exports.viewOrder = catchAsync(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    return next(new AppError("order not found", 404));
+  }
+
+  return res.status(200).json({
+    status: "success",
+    order,
   });
 });
