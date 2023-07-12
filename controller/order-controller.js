@@ -7,6 +7,7 @@ const sendEmail = require("../util/send-email");
 const uploadFile = require("../util/file-upload");
 const Product = require("../model/product-model");
 const Order = require("../model/order-model");
+const Cart = require("../model/cart-model");
 
 exports.createOrder = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -45,6 +46,7 @@ exports.createOrder = catchAsync(async (req, res, next) => {
           ...req.body,
         };
         const order = await Order.create(requestBody);
+        await Cart.deleteMany({ userId: req.user.id });
         return res.status(200).json({
           data: JSON.parse(data),
           order,
