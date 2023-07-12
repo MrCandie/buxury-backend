@@ -42,7 +42,7 @@ exports.createCart = catchAsync(async (req, res, next) => {
 exports.viewCart = catchAsync(async (req, res, next) => {
   const cart = await Cart.find({ userId: req.user.id }).populate({
     path: "product",
-    select: "name image price description units storeId",
+    select: "name image price description units storeId discount",
   });
 
   return res.status(200).json({
