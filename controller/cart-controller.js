@@ -40,7 +40,9 @@ exports.createCart = catchAsync(async (req, res, next) => {
 });
 
 exports.viewCart = catchAsync(async (req, res, next) => {
-  const cart = await Cart.find({ userId: req.user.id }).populate("product");
+  const cart = await Cart.find({ userId: req.user.id })
+    .populate("product")
+    .select("name image price description units");
 
   return res.status(200).json({
     status: "success",

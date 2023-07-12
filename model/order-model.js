@@ -14,6 +14,11 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: [true, "order must have delivery address"],
     },
+    status: {
+      type: String,
+      default: "pending",
+    },
+
     createdAt: {
       type: Date,
       default: Date.now(),

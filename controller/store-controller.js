@@ -5,6 +5,7 @@ const Store = require("../model/store-model");
 const sendEmail = require("../util/send-email");
 const uploadFile = require("../util/file-upload");
 const Product = require("../model/product-model");
+const Order = require("../model/order-model");
 
 exports.createStore = catchAsync(async (req, res, next) => {
   const storeExists = await Store.find({ name: req.body.name });
@@ -106,4 +107,36 @@ exports.getAllStores = catchAsync(async (req, res, next) => {
   const stores = await Store.find();
 
   return res.status(200).json({ status: "success", stores });
+});
+
+exports.getStoreOrders = catchAsync(async (req, res, next) => {
+  const userOrders = await Order.find({ userId: req.user.id });
+  const orders = await Order.find();
+
+  // const storeOrders = await orders?.filter(
+  //   (el) => el.product[0]?.storeId === req.params.id
+  // );
+  // const storeOrders = await orders
+  //   .map((el) => el.order)
+  //   ?.flatMap((el) => el)
+  //   .filter(async (el) => {
+  //     const product = await Product.findById(el.productId);
+  //     console.log(product);
+  //     return product?.storeId === req.params.id;
+  //   });
+  // console.log(storeOrders[0].product[0]?.storeId);
+
+  const storeOrders = orders.filter((el) => {
+    const orders = el.order.map(async (el) => {
+      const product = await Product.findById(el.productId);
+      console.log(product?.storeId === req.params.id);
+      return product?.storeId === req.params.id;
+    });
+  });
+
+  return res.status(200).json({
+    status: "success",
+    result: storeOrders.length,
+    orders: storeOrders,
+  });
 });
