@@ -46,7 +46,31 @@ exports.createOrder = catchAsync(async (req, res, next) => {
           ...req.body,
         };
         const order = await Order.create(requestBody);
-        await Cart.deleteMany({ userId: req.user.id });
+        console.log(order);
+
+        // await Cart.deleteMany({ userId: req.user.id });
+        const storeId = order.order[0]?.product[0]?.storeId;
+        const store = await Store.findById(storeId);
+        const user = await User.findById(order?.userId);
+
+        const message = `Dear ${store.name?.toUpperCase()}, You have a new order from ${user?.name?.toUpperCase()}\nProduct Name: order.order[0]?.product[0]?.name\nPrice: ${
+          order.order[0]?.product[0]?.price
+        }\nQuantity: ${order.order[0]?.quantity}\nDelivery Address: ${
+          order?.address
+        }\nLogin to your account to view your order here https://buxury.vercel.app/stores/${
+          store?.slug
+        }`;
+
+        try {
+          await sendEmail({
+            to: store.email,
+            subject: "New Order",
+            html: message,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+
         return res.status(200).json({
           data: JSON.parse(data),
           order,
@@ -116,7 +140,7 @@ exports.getUserOrders = catchAsync(async (req, res) => {
   });
 });
 
-exports.viewOrder = catchAsync(async (req, res) => {
+exports.viewOrder = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
 
   if (!order) {
