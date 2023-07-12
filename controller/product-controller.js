@@ -50,7 +50,7 @@ exports.viewProduct = catchAsync(async (req, res, next) => {
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find().populate({
     path: "store",
-    select: "name image",
+    select: "name image slug",
   });
 
   return res.status(200).json({
