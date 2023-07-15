@@ -128,7 +128,7 @@ exports.applyCoupon = catchAsync(async (req, res, next) => {
     return next(new AppError("invalid coupon code", 400));
   }
 
-  if (new Date(coupon?.expiresAt) > new Date(Date.now())) {
+  if (new Date(coupon?.expiresAt) < new Date(Date.now())) {
     return next(new AppError("Coupon code is expired", 400));
   }
 
