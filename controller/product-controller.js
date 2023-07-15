@@ -34,7 +34,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 exports.viewProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findById(req.params.id).populate({
     path: "store",
-    select: "name image",
+    select: "name image phone",
   });
 
   if (!product) {
